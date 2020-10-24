@@ -1,6 +1,6 @@
 # henriette
 
-TODO: Write a description here
+Avram generates the Operation and the Query classes from macros ran in Model. This means that we don't have the ability to reference other models to handle certain association logic. It also creates magic code.
 
 ## Installation
 

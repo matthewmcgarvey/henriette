@@ -3,4 +3,5 @@ class Manager < BaseModel
   column created_at : Time
   column updated_at : Time
   column name : String
+  has_many employees : Array(Employee)
 end

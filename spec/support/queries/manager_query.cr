@@ -1,3 +1,4 @@
 class ManagerQuery < Henriette::Query
-  connect Manager
+  generate_for Manager
+  connect_with :employees, EmployeeQuery
 end

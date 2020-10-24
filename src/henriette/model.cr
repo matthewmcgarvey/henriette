@@ -5,6 +5,8 @@ abstract class Henriette::Model
 
     # contains TypeDeclaration, should only be accessed with macros
     COLUMNS = [] of Nil
+    # contains TypeDeclaration, should only be accessed with macros
+    ASSOCIATIONS = {} of Nil => Nil
     COLUMN_NAMES = [] of Symbol
     default_table_name
 
@@ -16,13 +18,27 @@ abstract class Henriette::Model
   macro primary_key(decl)
     PRIMARY_KEY_NAME = {{ decl.var }}
     PRIMARY_KEY_TYPE = {{ decl.type }}
+    alias PrimaryKeyType = {{ decl.type }}
     column {{ decl }}
   end
 
-  macro column(type)
-    {% COLUMNS << type %}
-    {% COLUMN_NAMES << type.var.symbolize %}
-    property {{ type }}
+  macro column(decl)
+    {% COLUMNS << decl %}
+    {% COLUMN_NAMES << decl.var.symbolize %}
+    property {{ decl }}
+  end
+
+  macro belongs_to(decl)
+    {% foreign_key = "#{decl.var}_id" %}
+    {% ASSOCIATIONS[decl.var.symbolize] = { relationship: :belongs_to, assoc_name: decl.var, assoc_type: decl.type, foreign_key: foreign_key } %}
+    column({{ foreign_key.id }} : {{ decl.type }}::PrimaryKeyType)
+  end
+
+  macro has_many(decl)
+    {% foreign_key = "#{@type.name.underscore.split("::").last.id}_id".id %}
+    {% ASSOCIATIONS[decl.var.symbolize] = { relationship: :has_many, assoc_name: decl.var, assoc_type: decl.type, foreign_key: foreign_key } %}
+    @[::DB::Field(ignore: true)]
+    property {{ decl }} = {{ decl.type }}.new
   end
 
   macro default_table_name
