@@ -1,6 +1,6 @@
-# TODO: Write documentation for `Henriette`
+require "avram"
+require "./henriette/**"
+
 module Henriette
   VERSION = "0.1.0"
-
-  # TODO: Put your code here
 end

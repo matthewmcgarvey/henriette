@@ -6,9 +6,9 @@ crystal: 0.35.1
 license: MIT
 
 dependencies:
-  pg:
-    github: will/crystal-pg
-    version: ~> 0.22.0
+  avram:
+    github: luckyframework/avram
+    branch: master
 
 development_dependencies:
   ameba:
