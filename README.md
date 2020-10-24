@@ -14,13 +14,39 @@ Avram generates the Operation and the Query classes from macros ran in Model. Th
 
 2. Run `shards install`
 
-## Usage
+## Usage (WIP)
 
 ```crystal
 require "henriette"
 ```
 
-TODO: Write usage instructions here
+### Models
+
+```crystal
+class User < Henriette::Model
+  primary_key id : Int64
+  column created_at : Time
+  column updated_at : Time
+  column name : String
+  has_many credentials : Array(Credential)
+end
+```
+
+### Queries
+
+```crystal
+class UserQuery < Henriette::Query
+  connect_to User
+end
+```
+
+### Operations
+
+```crystal
+class SaveUser < Henriette::Operation
+  connect_to User
+end
+```
 
 ## Development
 
