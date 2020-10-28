@@ -22,9 +22,9 @@ abstract class Henriette::Query
     {% model = MODEL.resolve %}
     {% association = model.constant("ASSOCIATIONS")[assoc_name] %}
     {% if association[:relationship] == :belongs_to %}
-      AssociationMacros.generate_belongs_to_preload({{ model }}, {{ association }}, {{ query }})
+      BelongsToMacros.generate({{ association }}, {{ query }})
     {% elsif association[:relationship] == :has_many %}
-      AssociationMacros.generate_has_many_preload({{ model}}, {{ association }}, {{ query }})
+      HasManyMacros.generate({{ model }}, {{ association }}, {{ query }})
     {% end %}
   end
 

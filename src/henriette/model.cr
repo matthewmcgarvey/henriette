@@ -29,9 +29,14 @@ abstract class Henriette::Model
   end
 
   macro belongs_to(decl)
-    {% foreign_key = "#{decl.var}_id" %}
-    {% ASSOCIATIONS[decl.var.symbolize] = { relationship: :belongs_to, assoc_name: decl.var, assoc_type: decl.type, foreign_key: foreign_key } %}
-    column({{ foreign_key.id }} : {{ decl.type }}::PrimaryKeyType)
+    column({{ "#{decl.var}_id".id }} : {{ decl.type }}::PrimaryKeyType)
+    {% ASSOCIATIONS[decl.var.symbolize] = { relationship: :belongs_to, assoc_name: decl.var, assoc_type: decl.type, foreign_key: "#{decl.var}_id" } %}
+    @[::DB::Field(ignore: true)]
+    property _preloaded_{{ decl.var.id }} : {{ decl.type }}?
+
+    def {{ decl.var.id }}
+      _preloaded_{{ decl.var.id }} || raise "Association not preloaded"
+    end
   end
 
   macro has_many(decl)
@@ -43,7 +48,7 @@ abstract class Henriette::Model
     @[::DB::Field(ignore: true)]
     property _preloaded_{{ decl.var.id }} : {{ decl.type }}?
 
-    def employees
+    def {{ decl.var.id }}
       _preloaded_{{ decl.var.id }} || raise "Association not preloaded"
     end
   end
