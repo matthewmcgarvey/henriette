@@ -35,7 +35,7 @@ end
 ### Queries
 
 ```crystal
-class UserQuery < Henriette::Query
+class UserQuery < Henriette::Query(User)
   connect_to User
 end
 ```

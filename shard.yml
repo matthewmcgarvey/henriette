@@ -7,8 +7,8 @@ license: MIT
 
 dependencies:
   avram:
-    github: luckyframework/avram
-    branch: master
+    github: matthewmcgarvey/avram
+    branch: core-refactor
 
 development_dependencies:
   ameba:

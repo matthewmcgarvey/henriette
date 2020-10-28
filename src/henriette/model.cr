@@ -1,5 +1,4 @@
 abstract class Henriette::Model
-
   macro inherited
     include ::DB::Serializable
 
@@ -30,7 +29,7 @@ abstract class Henriette::Model
 
   macro belongs_to(decl)
     column({{ "#{decl.var}_id".id }} : {{ decl.type }}::PrimaryKeyType)
-    {% ASSOCIATIONS[decl.var.symbolize] = { relationship: :belongs_to, assoc_name: decl.var, assoc_type: decl.type, foreign_key: "#{decl.var}_id" } %}
+    {% ASSOCIATIONS[decl.var.symbolize] = {relationship: :belongs_to, assoc_name: decl.var, assoc_type: decl.type, foreign_key: "#{decl.var}_id"} %}
     @[::DB::Field(ignore: true)]
     property _preloaded_{{ decl.var.id }} : {{ decl.type }}?
 
@@ -44,7 +43,7 @@ abstract class Henriette::Model
       {% decl.raise "Must be an array" %}
     {% end %}
     {% foreign_key = "#{@type.name.underscore.split("::").last.id}_id".id %}
-    {% ASSOCIATIONS[decl.var.symbolize] = { relationship: :has_many, assoc_name: decl.var, assoc_type: decl.type.type_vars.first, foreign_key: foreign_key } %}
+    {% ASSOCIATIONS[decl.var.symbolize] = {relationship: :has_many, assoc_name: decl.var, assoc_type: decl.type.type_vars.first, foreign_key: foreign_key} %}
     @[::DB::Field(ignore: true)]
     property _preloaded_{{ decl.var.id }} : {{ decl.type }}?
 
