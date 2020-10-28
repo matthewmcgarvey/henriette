@@ -16,10 +16,10 @@ abstract class Henriette::Model
   end
 
   macro primary_key(decl)
+    column {{ decl }}
     PRIMARY_KEY_NAME = {{ decl.var }}
     PRIMARY_KEY_TYPE = {{ decl.type }}
     alias PrimaryKeyType = {{ decl.type }}
-    column {{ decl }}
   end
 
   macro column(decl)
@@ -35,10 +35,17 @@ abstract class Henriette::Model
   end
 
   macro has_many(decl)
+    {% if !decl.type.is_a?(Generic) %}
+      {% decl.raise "Must be an array" %}
+    {% end %}
     {% foreign_key = "#{@type.name.underscore.split("::").last.id}_id".id %}
-    {% ASSOCIATIONS[decl.var.symbolize] = { relationship: :has_many, assoc_name: decl.var, assoc_type: decl.type, foreign_key: foreign_key } %}
+    {% ASSOCIATIONS[decl.var.symbolize] = { relationship: :has_many, assoc_name: decl.var, assoc_type: decl.type.type_vars.first, foreign_key: foreign_key } %}
     @[::DB::Field(ignore: true)]
-    property {{ decl }} = {{ decl.type }}.new
+    property _preloaded_{{ decl.var.id }} : {{ decl.type }}?
+
+    def employees
+      _preloaded_{{ decl.var.id }} || raise "Association not preloaded"
+    end
   end
 
   macro default_table_name
