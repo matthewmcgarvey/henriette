@@ -25,5 +25,27 @@ module Henriette::QueryExtensions::BelongsToMacros
       end
       self
     end
+
+    def __yield_where_{{ association[:assoc_name].id }}
+      assoc_query = yield {{ query.id }}.new
+      merge_query(assoc_query.query)
+    end
+
+    def join_{{ association[:assoc_name].id }}
+      inner_join_{{ association[:assoc_name].id }}
+    end
+
+    {% for join_type in ["Inner", "Left", "Right", "Full"] %}
+      def {{ join_type.downcase.id }}_join_{{ association[:assoc_name].id }}
+        join(
+          Avram::Join::{{ join_type.id }}.new(
+            from: table_name,
+            to: {{ association[:assoc_type].id }}.table_name,
+            primary_key: {{ association[:foreign_key].id.symbolize }},
+            foreign_key: {{ association[:assoc_type].id }}::PRIMARY_KEY_NAME
+          )
+        )
+      end
+    {% end %}
   end
 end

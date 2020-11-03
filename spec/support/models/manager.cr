@@ -4,4 +4,5 @@ class Manager < BaseModel
   column updated_at : Time
   column name : String
   has_many employees : Array(Employee)
+  has_many business_sales : Array(BusinessSale), through: :employees
 end
